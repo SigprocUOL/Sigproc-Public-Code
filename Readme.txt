@@ -1,1 +1,1 @@
-This repository is for code from the Uni Oldenburg Signal Processing group to be made available to the public.
+This repository is for the Uni Oldenburg Signal Processing group's publicly available code.
