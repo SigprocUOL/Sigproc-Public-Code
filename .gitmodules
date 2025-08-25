@@ -1,3 +1,6 @@
 [submodule "deep_stwf/deep_stwf"]
 	path = deep_stwf/deep_stwf
 	url = https://github.com/phuntast1c/deep_stwf.git
+[submodule "train_openmha_bmfwf"]
+	path = train_openmha_bmfwf
+	url = https://github.com/phuntast1c/train_openmha_bmfwf.git
