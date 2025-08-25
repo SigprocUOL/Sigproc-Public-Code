@@ -4,3 +4,6 @@
 [submodule "deep_mfmvdr"]
 	path = deep_mfmvdr
 	url = https://gitlab.uni-oldenburg.de/hura4843/deep-mfmvdr
+[submodule "deep_stwf"]
+	path = deep_stwf
+	url = https://github.com/phuntast1c/deep_stwf
