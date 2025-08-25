@@ -1,0 +1,3 @@
+[submodule "deep_stwf/deep_stwf"]
+	path = deep_stwf/deep_stwf
+	url = https://github.com/phuntast1c/deep_stwf.git
