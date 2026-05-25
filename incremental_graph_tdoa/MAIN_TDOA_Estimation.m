@@ -2,7 +2,7 @@
 % 
 % Code Author: Klaus Brümann
 % Email: klaus.bruemann@uni-oldenburg.de
-% Last edited: 22 May 2026
+% Last edited: 25 May 2026
 % 
 % This code is an optimized and refined implementation of the TDOA 
 % estimation method proposed in [1] (and some baseline method discussed in 
@@ -28,6 +28,13 @@
 % 
 % If you assume that the microphone geometry is unknown, define:
 % assume_mic_geometry_known_yn = false;
+% 
+% Standard GCC-PHAT algorithm parameters are stored in the struct "Params".
+% E.g., if the target is a narrowband signal with known frequency limits, 
+% the lower and upper considered frequency can be varied by changing: 
+% Params.f_low and Params.f_high;
+% For speech signals, the considered methods work well using all 
+% frequencies between 0 - 8 kHz. 
 % 
 % References:
 % [1] K. Brümann, K. Yamaoka, N. Ono, and S. Doclo, "Incremental averaging
@@ -146,6 +153,11 @@ Implementations = {'Baseline','R','MST','MST+'}; % TDOA Estimation Methods
 % MST+: Proposed incremental averaging method
 Processing_time_method = zeros(length(Implementations),1);
 TDOA_est_mtx_full = cell(1,length(Implementations));
+
+% If you want to edit the minimum and maximal frequencies considered for
+% the GCC-PHAT function, edit these values:
+Params.f_low = 0;
+Params.f_high = Params.fs/2;
 
 % Method selection
 disp(['Processing ' num2str(round(size(x_t,1)/Params.fs,2)) ' s signal.'])

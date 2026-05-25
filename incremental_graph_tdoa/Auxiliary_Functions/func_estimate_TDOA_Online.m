@@ -5,18 +5,26 @@ K = Params.NIFFT/Params.GCC_Resampling;
 % Taper lowest and highest frequencies to 0.
 freqz = permute(Params.fs*((1:(K/2+1))-1)/K,[1,3,2,4]);
 w = ones(size(freqz));
-flow(1) = 600; % CPSDs below this frequency will have 0 magnitude
-flow(2) = 1000; % start tapering CPSD below this frequency
-flow(flow(1)>=flow(2)) = flow(2);
-idx = freqz > flow(1) & freqz < flow(2); 
-w(:,:,idx,:) = (0.5*(1 - cos(pi*(freqz(idx)-flow(1))/(flow(2)-flow(1)))));
-w(:,:,freqz <= flow(1),:) = 0;
-fhigh(1) = 7800; % start tapering CPSD above this frequency
-fhigh(2) = 8000; % CPSDs above this frequency will have 0 magnitude
-fhigh(fhigh(2)<=fhigh(1)) = fhigh(1);
-idx = freqz > fhigh(1) & freqz < fhigh(2); 
-w(:,:,idx,:) = (0.5*(1 + cos(pi*(freqz(idx)-fhigh(1))/(fhigh(2)-fhigh(1)))));
-w(:,:,freqz >= fhigh(2),:) = 0;
+if isfield(Params,'f_low')
+    w(:,:,freqz <= Params.f_low,:) = 0;
+else
+    flow(1) = 600; % CPSDs below this frequency will have 0 magnitude
+    flow(2) = 1000; % start tapering CPSD below this frequency
+    flow(flow(1)>=flow(2)) = flow(2);
+    idx = freqz > flow(1) & freqz < flow(2);
+    w(:,:,idx,:) = (0.5*(1 - cos(pi*(freqz(idx)-flow(1))/(flow(2)-flow(1)))));
+    w(:,:,freqz <= flow(1),:) = 0;
+end
+if isfield(Params,'f_high')
+    w(:,:,freqz >= Params.f_high,:) = 0;
+else
+    fhigh(1) = 7800; % start tapering CPSD above this frequency
+    fhigh(2) = 8000; % CPSDs above this frequency will have 0 magnitude
+    fhigh(fhigh(2)<=fhigh(1)) = fhigh(1);
+    idx = freqz > fhigh(1) & freqz < fhigh(2);
+    w(:,:,idx,:) = (0.5*(1 + cos(pi*(freqz(idx)-fhigh(1))/(fhigh(2)-fhigh(1)))));
+    w(:,:,freqz >= fhigh(2),:) = 0;
+end
 
 % OnlyRef = true;
 % Ref_ind = 1; % microphone closest to centre;

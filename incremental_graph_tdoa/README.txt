@@ -2,7 +2,7 @@
 % 
 % Code Author: Klaus Brümann
 % Email: klaus.bruemann@uni-oldenburg.de
-% Last edited: 22 May 2026
+% Last edited: 25 May 2026
 % 
 % This code is an optimized and refined implementation of the TDOA 
 % estimation method proposed in [1] (and some baseline method discussed in 
@@ -17,7 +17,7 @@
 % - Scenario 4:    one moving source,         distributed microphone array
 % 
 % Exemplary clean speech signals are from TIMIT database [2].
-% Clean speech signals were convolved with RIRs using RAZR [3] (adapted for 
+% Clean speech signals were convolved with RIRs using RAZR [3] (adapted for
 % moving sources).
 % Spherically isotropic babble noise is generated using [4].
 % 
@@ -28,6 +28,13 @@
 % 
 % If you assume that the microphone geometry is unknown, define:
 % assume_mic_geometry_known_yn = false;
+% 
+% Standard GCC-PHAT algorithm parameters are stored in the struct "Params".
+% E.g., if the target is a narrowband signal with known frequency limits, 
+% the lower and upper considered frequency can be varied by changing: 
+% Params.f_low and Params.f_high;
+% For speech signals, the considered methods work well using all 
+% frequencies between 0 - 8 kHz. 
 % 
 % References:
 % [1] K. Brümann, K. Yamaoka, N. Ono, and S. Doclo, "Incremental averaging
