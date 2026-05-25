@@ -207,7 +207,6 @@ VAD_idxs = [VAD_idxs, false(1,frames-size(VAD_idxs,2))];
 [TDOA_Err,TDOA_Acc] = deal( Inf(length(Implementations),1) );
 TDOA_Errors = cell(1,length(Implementations));
 
-
 figure(1); subplot(1,1,1);
 plot3(M_mtx(1,:),M_mtx(2,:),M_mtx(3,:),'o'); axis([0,6,0,6,0,2.4]); grid on;
 hold on;
@@ -228,7 +227,6 @@ if strcmp(Array_type,'Compact')
 else% strcmp(Array_type,'Distributed')
     Acc_Threshold = 1e-3;
 end
-max_TDOA_err = Acc_Threshold;
 for Implementation_idx = 1:length(Implementations)
     for plot_idx = 1:M
         subplot(M,1,plot_idx)
@@ -268,19 +266,12 @@ for Implementation_idx = 1:length(Implementations)
     TDOA_Errors{Implementation_idx} = abs(TDOA_true(2:end,:,:,:) - TDOA_est_mtx_full{Implementation_idx}(2:end,1,1,:)); % omit first microphone pair (1,1), because TDOA is 0 anyway.
     TDOA_Err(Implementation_idx,1) = mean( TDOA_Errors{Implementation_idx}(:,1,1,VAD_idxs) , [1,4]);
     TDOA_Acc(Implementation_idx,1) = sum(TDOA_Errors{Implementation_idx}(2:end,:,:,VAD_idxs) < Acc_Threshold,'all')/numel(TDOA_Errors{Implementation_idx}(2:end,:,:,VAD_idxs)); % omit first microphone pair (1,1), because TDOA is 0 anyway.
-
-    max_TDOA_err = max(max(TDOA_Errors{Implementation_idx}(:)),max_TDOA_err);
 end
 figure(3);
 for Implementation_idx = 1:length(Implementations)
     subplot(2,2,Implementation_idx)
-    histogram(TDOA_Errors{Implementation_idx}(:)*1e3,'BinWidth',1e3*Acc_Threshold/2)
+    histogram(TDOA_Errors{Implementation_idx}(:))
     ylim([0,numel(TDOA_Errors{Implementation_idx})])
-    xlim([0,max_TDOA_err*1e3])
-    grid on;
-    xlabel('TDOA Error [ms]')
-    title(Implementations{Implementation_idx})
-    sgtitle('TDOA Error Histograms')
 end
 
 
