@@ -2,7 +2,7 @@
 % 
 % Code Author: Klaus Brümann
 % Email: klaus.bruemann@uni-oldenburg.de
-% Last edited: 25 May 2026
+% Last edited: 26 May 2026
 % 
 % This code is an optimized and refined implementation of the TDOA 
 % estimation method proposed in [1] (and some baseline method discussed in 

@@ -2,7 +2,7 @@
 % 
 % Code Author: Klaus Brümann
 % Email: klaus.bruemann@uni-oldenburg.de
-% Last edited: 25 May 2026
+% Last edited: 26 May 2026
 % 
 % This code is an optimized and refined implementation of the TDOA 
 % estimation method proposed in [1] (and some baseline method discussed in 
@@ -87,12 +87,12 @@ switch Scenario
         Array_type = 'Compact';
         assume_mic_geometry_known_yn = true; % microphone geometry is available (for setting upper TDOA limits)
     case 'Scenario 3' % Exemplary stationary source scenario, distributed microphone array
-        SNR_dB = -10; % signal-to-noise ratio [dB]
+        SNR_dB = -11; % signal-to-noise ratio [dB]
         Moving_source_yn = false;
         Array_type = 'Distributed';
         assume_mic_geometry_known_yn = true; % microphone geometry is available (for setting upper TDOA limits)
     case 'Scenario 4' % Exemplary moving source scenario, distributed microphone array
-        SNR_dB = 5; % signal-to-noise ratio [dB]
+        SNR_dB = 3; % signal-to-noise ratio [dB]
         Moving_source_yn = true;
         Array_type = 'Distributed';
         assume_mic_geometry_known_yn = true; % microphone geometry is available (for setting upper TDOA limits)
@@ -129,8 +129,8 @@ y_t = func_AddNoise(x_t, SNR_dB, M_mtx, M, Params.fs, c);
 
 %% Variable definition and initialization:
 % STFT parameters
-K = 2048; % Frame length: should be long enough to capture enough correlated speech between microphones
-F = K/4; % Frame shift 
+K = 2048; % Frame length (integer): should be long enough to capture enough correlated speech between microphones
+F = ceil(K/4); % Frame shift 
 Ana_window = 'sqrtHann'; % STFT analysis window
 [Params.GCC_Resampling, Params.NIFFT] = func_Compute_GCC_Resampling_from_Frame_Length(K,Params.fs); % This function automatically determines some GCC-PHAT upsampling factors (using zero-padding of CPSDs) based on frame length.
 
@@ -156,8 +156,8 @@ TDOA_est_mtx_full = cell(1,length(Implementations));
 
 % If you want to edit the minimum and maximal frequencies considered for
 % the GCC-PHAT function, edit these values:
-Params.f_low = 0;
-Params.f_high = Params.fs/2;
+Params.f_low = eps;
+Params.f_high = Params.fs/2-eps;
 
 % Method selection
 disp(['Processing ' num2str(round(size(x_t,1)/Params.fs,2)) ' s signal.'])
@@ -235,10 +235,11 @@ drawnow;
 fig = figure(2);
 % Set TDOA accuracy threshold differently for compact and distributed 
 % microphone arrays:
-if strcmp(Array_type,'Compact')
+
+if strcmp(Scenario,'Scenario 4')
+    Acc_Threshold = 1e-3; % moving source, distributed array
+else
     Acc_Threshold = 0.1e-3;
-else% strcmp(Array_type,'Distributed')
-    Acc_Threshold = 1e-3;
 end
 max_TDOA_err = Acc_Threshold;
 for Implementation_idx = 1:length(Implementations)
